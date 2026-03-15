@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>摸鱼日历 - 今日摸鱼指数查询</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <div class="poster" id="poster">
+      <div class="topbar">
+        <div style="display: flex; align-items: center">
+          <img class="top-gif" src="{{ top_gif_url }}" alt="摸鱼GIF" />
+          <div>摸鱼哲学：摸鱼是职场智慧，不是态度问题</div>
+        </div>
+        <div>原创公众号：柒吾</div>
+      </div>
+
+      <div class="main-title">
+        <div class="date-week-wrapper">
+          <div class="date-left">
+            <div class="date-year-month" id="yearMonth">
+              {{ year_month_text }}
+            </div>
+            <div class="date-num" id="dayNum">{{ day_num }}</div>
+          </div>
+          <div class="week-vertical" id="week">{{ week_text }}</div>
+        </div>
+
+        <div class="title-center">
+          <h1 class="title-big">摸鱼日历</h1>
+          <p class="title-pinyin">jin tian ni mo yu le ma?</p>
+        </div>
+
+        <div class="weekend-right">
+          <div>距离周末</div>
+          <div class="weekend-num" id="weekend">{{ weekend_num }}</div>
+          <div id="weekendText">天</div>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="info-text">
+          <div class="info-text-top">
+            <h3 id="lunar">📅 摸鱼总经办提醒您</h3>
+          </div>
+
+          <div class="info-text-middle">
+            <div id="todaySpecial" style="font-size: 15px">
+              {{ greeting_text }}
+            </div>
+          </div>
+
+          <div class="info-text-bottom">
+            <div id="fortune">{{ fortune_text }}</div>
+
+            <div id="fishLevel" class="pill">
+              {% if is_weekend %} 摸鱼指数
+              <span class="fish-index-number">{{ fish_index }}%</span> ｜ {{
+              fish_level_text }} {% else %} 🐟 摸鱼指数
+              <span class="fish-index-number">{{ fish_index }}%</span> ｜ {{
+              fish_level_text }} {% endif %}
+            </div>
+
+            <div id="zodiac">⭐ {{ zodiac }}：{{ zodiac_quote }}</div>
+          </div>
+        </div>
+
+        <img
+          class="info-img"
+          id="randomFishImg"
+          src="{{ fish_img_url }}"
+          alt="摸鱼图片"
+        />
+      </div>
+
+      <div class="timeline-container">
+        <div class="block" id="timeline">
+          <h3>🔔 今日摸鱼时间轴</h3>
+          <div style="font-size: 13px; line-height: 1.8">
+            09:00 伪装上班<br />
+            10:30 假装思考<br />
+            11:30 上午摸鱼<br />
+            14:00 午后犯困<br />
+            16:00 深度摸鱼<br />
+            17:30 准备跑路
+          </div>
+        </div>
+
+        <div class="block" id="salary-countdown">
+          <h3>💰 发工资倒计时</h3>
+          <div style="font-size: 13px; line-height: 1.8" id="salaryDays">
+            {% for line in salary_lines %} {{ line }}<br />
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="block" id="festival"></div>
+
+      <div class="footer" id="footerText">
+        <span id="footer-quote">{{ footer_quote }}</span><br />
+        <span class="footer-note">本页面仅供精神放松使用，对老板无效。</span>
+      </div>
+    </div>
+
+    <script src="solarlunar.min.js"></script>
+
+    <script>
+      const today = new Date();
+      const fesDiv = document.getElementById("festival");
+      fesDiv.innerHTML = "<h3>🎉 节日倒计时</h3>";
+
+      const getDiffDays = (targetDate) => {
+        const timeDiff = targetDate.getTime() - today.getTime();
+        return Math.ceil(timeDiff / (1000 * 3600 * 24));
+      };
+
+      const createDate = (year, month, day) => new Date(year, month - 1, day);
+
+      const festivals = [
+        ["元旦", "solar", 1, 1],
+        ["春节", "lunar", 1, 1],
+        ["清明", "solar", 4, 5],
+        ["劳动节", "solar", 5, 1],
+        ["端午", "lunar", 5, 5],
+        ["中秋", "lunar", 8, 15],
+        ["国庆", "solar", 10, 1],
+      ];
+
+      festivals.forEach((f) => {
+        let d;
+        if (f[1] === "solar") {
+          d = createDate(today.getFullYear(), f[2], f[3]);
+        } else {
+          const r = solarlunar.lunar2solar(today.getFullYear(), f[2], f[3]);
+          d = new Date(r.cYear, r.cMonth - 1, r.cDay);
+        }
+        if (d < today) d.setFullYear(d.getFullYear() + 1);
+        fesDiv.innerHTML += `<span class="pill">${f[0]}：${getDiffDays(d)}天</span>`;
+      });
+    </script>
+  </body>
+</html>
