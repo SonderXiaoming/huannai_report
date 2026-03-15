@@ -77,6 +77,14 @@ playwright install chromium
 
 另外，每周日会自动清理番剧缓存与 Epic 缓存。
 
+## 预览
+
+![日报预览](https://github.com/user-attachments/assets/b6725400-bcff-4612-8f60-76ba9a3734f4)
+
+![摸鱼日历预览](https://github.com/user-attachments/assets/de11a6a6-c03f-459d-9ead-640137cf328b)
+
+![长图预览](https://github.com/user-attachments/assets/a0c07d03-c55e-4061-81ff-605412e805af)
+
 ## 说明
 
 1. 若出现截图渲染失败，请先检查 Playwright 浏览器是否安装。
